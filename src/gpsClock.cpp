@@ -115,3 +115,13 @@ void GpsClock :: read(Adafruit_GPS &GPS)
         altitude = GPS.altitude; // Update the latitude
     }
 }
+
+/**
+ * @brief A method to put the sensor to sleep
+ * 
+ */
+void GpsClock :: sleep(void)
+{
+    digitalWrite(EN, LOW);
+    gpio_hold_en(EN);
+}

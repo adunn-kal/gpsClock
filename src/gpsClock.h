@@ -43,4 +43,5 @@ class GpsClock
 
         void update(Adafruit_GPS &GPS); ///< A method to run and check the GPS module for new data
         void read(Adafruit_GPS &GPS); ///< A method to read data from the GPS module
+        void sleep(void); ///< A method to put the GPS module to sleep
 };
