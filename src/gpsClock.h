@@ -21,7 +21,7 @@ class GpsClock
         gpio_num_t TX;
         gpio_num_t EN;
 
-        uint8_t diffGMT;
+        uint32_t UNIX_OFFSET = 28800;
 
     public:
         bool newData = false; ///< A flag to represent when new data has arrived
@@ -43,5 +43,7 @@ class GpsClock
 
         void update(Adafruit_GPS &GPS); ///< A method to run and check the GPS module for new data
         void read(Adafruit_GPS &GPS); ///< A method to read data from the GPS module
+        String getUnixTime(Adafruit_GPS &GPS); ///< A method to get a current Unix timestamp from the GPS
+        String getDisplayTime(Adafruit_GPS &GPS); ///< A method to get a current human readable timestamp from the GPS
         void sleep(void); ///< A method to put the GPS module to sleep
 };

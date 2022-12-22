@@ -67,7 +67,10 @@ Adafruit_GPS GpsClock :: begin()
 void GpsClock :: update(Adafruit_GPS &GPS)
 {
     // Check the GPS for new messages
-    GPS.read();
+    for (uint8_t i = 0; i < 100; i++)
+    {
+        GPS.read();
+    }
 
     // If a new message has arrived
     if(GPS.newNMEAreceived())
@@ -101,8 +104,8 @@ void GpsClock :: read(Adafruit_GPS &GPS)
     if (newData)
     {
         newData = false;
-        
-        millisOffset = (millis() - GPS.milliseconds) % 1000; // Update the millisecond offset
+
+        millisOffset = millis() - GPS.milliseconds; // Update the millisecond offset
 
         fixType = GPS.fixquality; // Update the fix type
 
@@ -114,6 +117,59 @@ void GpsClock :: read(Adafruit_GPS &GPS)
 
         altitude = GPS.altitude; // Update the latitude
     }
+}
+
+/**
+ * @brief Get a current Unix timestamp
+ * 
+ * @param GPS A reference to the GPS object from which to pull time data
+ * @return String A Unix timestamp
+ */
+String GpsClock :: getUnixTime(Adafruit_GPS &GPS)
+{
+    UnixTime stamp(0);
+    stamp.setDateTime(2000 + GPS.year, GPS.month, GPS.day, GPS.hour, GPS.minute, GPS.seconds);
+
+    uint32_t unix = stamp.getUnix() + UNIX_OFFSET;
+
+    uint32_t myMillis = millis() - millisOffset;
+    String unixString = String(unix) + ".";
+    if (myMillis < 100) unixString += "0";
+    if (myMillis < 10) unixString += "0";
+    unixString += String(myMillis % 1000);
+
+
+    return unixString;
+}
+
+/**
+ * @brief Get a current displayable timestamp
+ * 
+ * @param GPS A reference to the GPS object from which to pull time data
+ * @return String A displayable timestamp
+ */
+String GpsClock :: getDisplayTime(Adafruit_GPS &GPS)
+{
+    UnixTime stamp(0);
+    stamp.setDateTime(2000 + GPS.year, GPS.month, GPS.day, GPS.hour, GPS.minute, GPS.seconds);
+
+    uint32_t unix = stamp.getUnix() + UNIX_OFFSET;
+
+    
+    String displayString = String(GPS.hour) + ":";
+
+    if (GPS.minute < 10) displayString += "0";
+    displayString += String(GPS.minute) + ":";
+
+    if (GPS.seconds < 10) displayString += "0";
+    displayString += String(GPS.seconds) + ".";
+
+    uint32_t myMillis = millis() - millisOffset;
+    if (myMillis < 100) displayString += "0";
+    if (myMillis < 10) displayString += "0";
+    displayString += String(myMillis % 1000);
+
+    return displayString;
 }
 
 /**
