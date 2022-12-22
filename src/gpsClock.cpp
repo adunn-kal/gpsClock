@@ -132,11 +132,11 @@ String GpsClock :: getUnixTime(Adafruit_GPS &GPS)
 
     uint32_t unix = stamp.getUnix() + UNIX_OFFSET;
 
-    uint32_t myMillis = millis() - millisOffset;
+    uint32_t myMillis = (millis() - millisOffset)%1000;
     String unixString = String(unix) + ".";
     if (myMillis < 100) unixString += "0";
     if (myMillis < 10) unixString += "0";
-    unixString += String(myMillis % 1000);
+    unixString += String(myMillis);
 
 
     return unixString;
@@ -164,10 +164,10 @@ String GpsClock :: getDisplayTime(Adafruit_GPS &GPS)
     if (GPS.seconds < 10) displayString += "0";
     displayString += String(GPS.seconds) + ".";
 
-    uint32_t myMillis = millis() - millisOffset;
+    uint32_t myMillis = (millis() - millisOffset)%1000;
     if (myMillis < 100) displayString += "0";
     if (myMillis < 10) displayString += "0";
-    displayString += String(myMillis % 1000);
+    displayString += String(myMillis);
 
     return displayString;
 }
