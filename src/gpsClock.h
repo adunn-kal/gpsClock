@@ -46,5 +46,6 @@ class GpsClock
         void read(Adafruit_GPS &GPS); ///< A method to read data from the GPS module
         String getUnixTime(Adafruit_GPS &GPS); ///< A method to get a current Unix timestamp from the GPS
         String getDisplayTime(Adafruit_GPS &GPS); ///< A method to get a current human readable timestamp from the GPS
+        uint64_t getSleepTime(Adafruit_GPS &GPS, uint8_t MINUTE_ALLLIGN, uint8_t READ_TIME); ///< A method to get the sleep time
         void sleep(void); ///< A method to put the GPS module to sleep
 };

@@ -207,6 +207,42 @@ String GpsClock :: getDisplayTime(Adafruit_GPS &GPS)
 }
 
 /**
+ * @brief Calculate the time to sleep
+ * 
+ * @param GPS The GPS object used to determine the time
+ * @param MINUTE_ALLIGN The minute allignment for data readings to be centered about
+ * @param READ_TIME The number of seconds to read data
+ * @return uint64_t The number of microseconds to sleep
+ */
+uint64_t GpsClock :: getSleepTime(Adafruit_GPS &GPS, uint8_t MINUTE_ALLIGN, uint8_t READ_TIME)
+{
+    // If the gps has a fix, use it to calculate the next read time
+    if (fixType)
+    {
+        // Calculate next time in uS until next measurement interval
+        uint64_t next_measurement = (MINUTE_ALLIGN - (GPS.minute % MINUTE_ALLIGN)) * (60 * 1000000);
+        next_measurement -= GPS.seconds * 1000000;
+        next_measurement -= ((millis() - millisOffset) % 1000) * 1000;
+
+        // Subtract off half of the read time
+        if (next_measurement > (READ_TIME*1000000/2))
+        {
+            next_measurement -= READ_TIME*1000000/2;
+            return next_measurement;
+        }
+
+        else return 1;
+    }
+
+    // Otherwise, just sleep for the set time
+    else
+    {
+        return (MINUTE_ALLIGN*60*1000000) - (READ_TIME*1000000/2);
+    }
+    
+}
+
+/**
  * @brief A method to put the sensor to sleep
  * 
  */
