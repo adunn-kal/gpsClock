@@ -60,6 +60,40 @@ Adafruit_GPS GpsClock :: begin()
 }
 
 /**
+ * @brief A method to wait until the GPS has a fix
+ * 
+ * @param gps 
+ * @param waitTime 
+ * @return bool A true or false indicator that the method is done
+ */
+bool GpsClock :: getFix(Adafruit_GPS &gps, uint32_t waitTime)
+{
+  Serial.printf("Waiting %d seconds for GPS fix\n", waitTime);
+  
+  uint32_t start = millis();
+  uint8_t fixType = 0;
+
+  // Wait a minute to try and get a fix
+  while ((millis() - start) < waitTime*1000)
+  {
+    gps.read();
+    if(gps.newNMEAreceived())
+    {
+      gps.parse(gps.lastNMEA());  // this also sets the newNMEAreceived() flag to false
+      fixType = gps.fixquality;
+    }
+    
+    if (fixType)
+    {
+      Serial.printf("GPS fix found after %d seconds\n", (millis()-start)/1000);
+      return true;
+    }
+  }
+
+  return true;
+}
+
+/**
  * @brief A method to run and check the GPS module for new data
  * 
  * @param GPS A reference to a GPS object to update

@@ -41,6 +41,7 @@ class GpsClock
 
         Adafruit_GPS begin(); ///< A method to start the GPS module
 
+        bool getFix(Adafruit_GPS &GPS, uint32_t waitTime); ///< A method to wait for a GPS fix
         void update(Adafruit_GPS &GPS); ///< A method to run and check the GPS module for new data
         void read(Adafruit_GPS &GPS); ///< A method to read data from the GPS module
         String getUnixTime(Adafruit_GPS &GPS); ///< A method to get a current Unix timestamp from the GPS
