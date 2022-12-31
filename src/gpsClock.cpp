@@ -237,7 +237,7 @@ uint64_t GpsClock :: getSleepTime(Adafruit_GPS &GPS, uint8_t MINUTE_ALLIGN, uint
     // Otherwise, just sleep for the set time
     else
     {
-        return (MINUTE_ALLIGN*60*1000000) - (READ_TIME*1000000/2);
+        return (MINUTE_ALLIGN*60*1000000);
     }
     
 }
